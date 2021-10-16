@@ -32,14 +32,14 @@ processDate(char str_date[], struct Date *D)
 }
 
 void
-updateData(struct Date D)
+updateData(struct Date D, char * comment)
 {
 	FILE *tmp_data = fopen("/home/shn/Works/tracker/data/temp.dat", "w");
 	fprintf(tmp_data, "%d/%d/%d\n", D.day, D.month, D.year);
 	fclose(tmp_data);
 
 	FILE *tmp_log = fopen("/home/shn/Works/tracker/data/log.csv", "a");
-	fprintf(tmp_log, "%d/%d/%d,\n", D.day, D.month, D.year);
+	fprintf(tmp_log, "%d/%d/%d,%s,\n", D.day, D.month, D.year, comment);
 	fclose(tmp_data);
 }
 

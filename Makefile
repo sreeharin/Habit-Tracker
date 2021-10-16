@@ -1,4 +1,5 @@
-tracker: output
-		 cc -o bin/tracker -g main.c src/tools.c src/date.c 
+tracker:
+	cc -o bin/tracker main.c -Iinclude -Llib -ltracker
+
 output:
-		mkdir -p bin/
+	mkdir -p bin/

@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "src/tools.h"
-#include "src/date.h"
+#include "tools.h"
+#include "date.h"
 
 void help(void);
-void update(char *);
+void update(char *, char *);
 void view(void);
 
 int
@@ -15,11 +15,13 @@ main(int argc, char **argv)
 {
 	int vflag = -1;
 	int uflag = -1;
-
+	int cflag = -1;
 	int opt;
 
-	char *user_date = (char *)malloc(11 * sizeof(user_date));
-	while((opt = getopt(argc, argv, "u:v")) != -1)
+	char *user_date = (char *)malloc(11 * sizeof(char));
+	char *comment = (char *)malloc(1024 * sizeof(char));
+
+	while((opt = getopt(argc, argv, "u:vc:")) != -1)
 	{
 		switch(opt)
 		{
@@ -30,6 +32,10 @@ main(int argc, char **argv)
 			case 'v':
 				vflag = 0;
 				break;
+			case 'c':
+				cflag = 0;
+				memcpy(comment, optarg, strlen(optarg));
+				break;
 			case '?':
 				break;
 			default:
@@ -37,18 +43,21 @@ main(int argc, char **argv)
 		}
 	}
 
-	if(vflag == -1 && uflag == -1)
+	if(vflag == -1 && uflag == -1 && cflag == -1)
 	{
 		help();
 	}
-
-	if(vflag == 0)
+	else if(vflag == 0)
 	{
 		view();
 	}
-	else if(uflag == 0)
+	else if(uflag == 0 && cflag == 0)
 	{
-		update(user_date);
+		update(user_date, comment);
+	}
+	else
+	{
+		help();
 	}
 
 	return 0;
@@ -57,7 +66,9 @@ main(int argc, char **argv)
 void
 help(void)
 {
-	printf("usage : tracker [-v view] [-u update [t today] [[dd/mm/yyyy]]\n");
+	printf("usage : tracker [-v view]\n" 
+				"\t\t[-u update [t today] [dd/mm/yyyy]]\n" 
+				"\t\t[-c \"comment\"]\n");
 }
 
 void
@@ -70,19 +81,19 @@ view(void)
 	int diff = diffDate(tmp, t);
 	
 	printf(
-	"It has been %d days since %d/%d/%d\n"
-	"Keep going\n",
+	"\nIt has been %d days since %d/%d/%d\n"
+	"Keep going\n\n",
 	diff, tmp.day, tmp.month, tmp.year
 	);
 }
 
 void
-update(char * date)
+update(char * date, char * comment)
 {
 	if(strcmp(date, "t") == 0)
 	{
 		struct Date tmp_today = today();
-		updateData(tmp_today);
+		updateData(tmp_today, comment);
 		
 		printf("Log has been updated\n");
 	}
@@ -93,7 +104,7 @@ update(char * date)
 		
 		if(isValid(tmp_date)==0)
 		{
-			updateData(tmp_date);
+			updateData(tmp_date, comment);
 			printf("Log has been updated\n");
 		}
 	}
