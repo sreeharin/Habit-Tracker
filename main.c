@@ -67,8 +67,8 @@ void
 help(void)
 {
 	printf("usage : tracker [-v view]\n" 
-				"\t\t[-u update [t today] [dd/mm/yyyy]]\n" 
-				"\t\t[-c \"comment\"]\n");
+		   "\t\t[-u update [t today] [dd/mm/yyyy] " 
+		   "[-c \"comment\"]]\n");
 }
 
 void
